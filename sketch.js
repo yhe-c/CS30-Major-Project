@@ -1,9 +1,9 @@
-// Project Title
-// Your Name
+// Hair My Screams 2.0
+// Eesha He
 // Date
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// ...
 
 
 function setup() {

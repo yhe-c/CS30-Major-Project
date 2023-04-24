@@ -8,7 +8,7 @@ Remake of my previous semester's major project. Hair My Screams 2.0
 
 - main menu/page
 - character and enemy sprites
-- collisions 
+- collisions and physics
 - different levels (2d arrays)
 - keyboard interactions
 - background music
