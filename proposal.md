@@ -2,12 +2,18 @@
 
 ## Major Project Description
 
-description...
+Remake of my previous semester's major project. Hair My Screams 2.0
 
 ## Needs to Have List
 
-- thing 1
+- main menu/page
+- character and enemy sprites
+- different levels (2d arrays)
+- keyboard interactions
+- background music
 
 ## Nice to Have List
 
-- thing 2
+- sound effects
+- better character animation
+- different platforms (moving, breaking)
