@@ -2,19 +2,24 @@
 
 ## Major Project Description
 
-Remake of my previous semester's major project. Hair My Screams 2.0
+Hair My Screams 2.0
+Remake of my previous semester's major project. 
+Platformer based on a horror manga, PTSD Radio.
 
 ## Needs to Have List
 
-- main menu/page
-- character and enemy sprites
+- main menu/page (have buttons)
+- character, enemy, and item sprites 
 - collisions and physics
 - different levels (2d arrays)
 - keyboard interactions
-- background music
+- background music (able to turn on and off)
+- game over, pause game, retry level
 
 ## Nice to Have List
 
-- sound effects
-- better character animation
-- different platforms (moving, breaking)
+- able to choose your character
+- sound effects (able to turn on and off)
+- better/smoother character animation
+- different platforms (moving platforms, platforms that break after the character is on it for a certain time)
+- randomly generated levels that are able to be completed
