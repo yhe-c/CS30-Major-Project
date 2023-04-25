@@ -23,3 +23,4 @@ Platformer based on a horror manga, PTSD Radio.
 - better/smoother character animation
 - different platforms (moving platforms, platforms that break after the character is on it for a certain time)
 - randomly generated levels that are able to be completed
+- add shaking effects when certain this happen
