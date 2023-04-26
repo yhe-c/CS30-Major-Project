@@ -5,6 +5,31 @@
 // Extra for Experts:
 // ...
 
+class Player {
+  constructor() {
+    this.x;
+    this.y;
+    this.dx;
+    this.dy;
+    this.speed;
+    this.gravity = 0.5;
+  }
+}
+
+class Enemy {
+  constructor() {
+    this.x;
+    this.y;
+    this.dx;
+    this.dy;
+    this.speed;
+  }
+
+  collision() {
+
+  }
+}
+
 let lvl_background;
 
 function preload() {
