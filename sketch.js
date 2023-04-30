@@ -31,16 +31,34 @@ class Enemy {
 }
 
 let lvl_background;
+let lvl_data;
+let platforms;
 
 function preload() {
   lvl_background = loadImage("images/lvl_1_img.jpg");
+  lvl_data = loadStrings("levels/lvl1.txt");
 }
 
+let bricks;
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  new Canvas(windowWidth, windowHeight);
+
+  bricks = new Group();
+  bricks.w = 50;
+  bricks.h = 10;
+  bricks.tile = 1;
+
+  new Tiles(
+    [lvl_data],
+    width/3,
+    height/5,
+    bricks.w,
+    bricks.h
+  );
 }
 
 function draw() {
-  background(220);
-  image(lvl_background, width/3, 0, width/2.75, height);
+  clear();
+  // background(220);
+  // image(lvl_background, width/3, 0, width/2.75, height);
 }
