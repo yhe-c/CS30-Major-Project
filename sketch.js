@@ -5,60 +5,62 @@
 // Extra for Experts:
 // ...
 
-class Player {
-  constructor() {
-    this.x;
-    this.y;
-    this.dx;
-    this.dy;
-    this.speed;
-    this.gravity = 0.5;
-  }
-}
+// class Player {
+//   constructor() {
+//     this.x;
+//     this.y;
+//     this.dx;
+//     this.dy;
+//     this.speed;
+//     this.gravity = 0.5;
+//   }
+// }
 
-class Enemy {
-  constructor() {
-    this.x;
-    this.y;
-    this.dx;
-    this.dy;
-    this.speed;
-  }
+// class Enemy {
+//   constructor() {
+//     this.x;
+//     this.y;
+//     this.dx;
+//     this.dy;
+//     this.speed;
+//   }
 
-  collision() {
+//   collision() {
 
-  }
-}
+//   }
+// }
 
+//initiating global variables
 let lvl_background;
 let lvl_data;
 let platforms;
+let character;
 
+//preload images and level data
 function preload() {
   lvl_background = loadImage("images/lvl_1_img.jpg");
   lvl_data = loadStrings("levels/lvl1.txt");
 }
 
-let bricks;
 function setup() {
   new Canvas(windowWidth, windowHeight);
 
-  bricks = new Group();
-  bricks.w = 50;
-  bricks.h = 10;
-  bricks.tile = 1;
+  platforms = new Group();
+  platforms.w = 20;
+  platforms.h = 20;
+  platforms.color = "black";
+  platforms.tile = "=";
 
   new Tiles(
-    [lvl_data],
+    lvl_data,
     width/3,
-    height/5,
-    bricks.w,
-    bricks.h
+    0,
+    platforms.w + 1,
+    platforms.h + 1
   );
 }
 
 function draw() {
   clear();
-  // background(220);
-  // image(lvl_background, width/3, 0, width/2.75, height);
+  image(lvl_background, width/3, 0, width/2.75, height);
 }
