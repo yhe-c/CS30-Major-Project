@@ -5,35 +5,11 @@
 // Extra for Experts:
 // ...
 
-// class Player {
-//   constructor() {
-//     this.x;
-//     this.y;
-//     this.dx;
-//     this.dy;
-//     this.speed;
-//     this.gravity = 0.5;
-//   }
-// }
-
-// class Enemy {
-//   constructor() {
-//     this.x;
-//     this.y;
-//     this.dx;
-//     this.dy;
-//     this.speed;
-//   }
-
-//   collision() {
-
-//   }
-// }
-
 //initiating global variables
 let lvl_background;
 let character_img;
-let character_ani;
+let character_idle;
+let character_walk;
 let lvl_data;
 let platforms;
 let character;
@@ -70,26 +46,32 @@ function setup() {
   character.y = height/(height/45);
   character.collider = "d";
   
-  character_ani = loadAni("images/f1.png", "images/f2.png", "images/f3.png");
-  character_ani.frameDelay = 8;
+  character_idle = loadAni("images/f1.png");
+  character_idle.frameDelay = 10;
+  character.addAni("idle", character_idle);
+  character_walk = loadAni("images/f1.png", "images/f2.png", "images/f3.png");
+  character_walk.frameDelay = 8;
+  character.addAni("walk", character_walk);
 }
 
 function draw() {
   clear();
   image(lvl_background, width/3, 0, width/2.75, height);
-}
-
-function keyTyped() {
-  if (key === "a") {
-    character.velocity.x = -3;
+  if (kb.pressing("left")) {
+    character.ani ="walk";
+    character.mirror.x = true;
+    character.vel.x = -2;
   }
-  else if (key === "d") {
-    character.velocity.x = 3;
+  else if (kb.pressing("right")) {
+    character.ani ="walk";
+    character.mirror.x = false;
+    character.vel.x = 2;
   }
-  else if (key === "w") {
-    character.velocity.y = -3;
+  else if (kb.presses("up")) {
+    character.vel.y = -3;
   }
   else {
+    character.ani = "idle";
     character.vel.x = 0;
   }
 }
