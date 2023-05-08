@@ -45,6 +45,8 @@ function setup() {
   character.x = width/2.8;
   character.y = height/(height/45);
   character.collider = "d";
+  character.friction = 0;
+  character.rotationLock = true;
   
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
@@ -68,7 +70,7 @@ function draw() {
     character.vel.x = 2;
   }
   else if (kb.presses("up")) {
-    character.vel.y = -3;
+    character.vel.y = -5;
   }
   else {
     character.ani = "idle";
