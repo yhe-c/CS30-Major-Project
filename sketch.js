@@ -13,12 +13,15 @@ let character_walk;
 let lvl_data;
 let platforms;
 let character;
+let ward_img;
+let ward;
 
 //preload images and level data
 function preload() {
   lvl_background = loadImage("images/lvl_1_img.jpg");
   character_img = loadImage("images/f1.png");
   lvl_data = loadStrings("levels/lvl1.txt");
+  ward_img = loadImage("images/ward.png");
 }
 
 function setup() {
@@ -31,6 +34,17 @@ function setup() {
   platforms.color = "black";
   platforms.tile = "=";
   platforms.collider = "static";
+
+  ward = new Group();
+  ward.w = 5;
+  ward.h = 10;
+  ward.tile = "!";
+  ward.img = ward_img;
+  ward.scale = 1/2;
+  push();
+  rotate(250);
+  pop();
+  ward.collider = "s";
 
   new Tiles(
     lvl_data,
@@ -47,6 +61,7 @@ function setup() {
   character.collider = "d";
   character.friction = 0;
   character.rotationLock = true;
+  character.overlaps(ward, collect);
   
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
@@ -56,9 +71,16 @@ function setup() {
   character.addAni("walk", character_walk);
 }
 
+function collect() {
+  ward.remove();
+}
+
 function draw() {
   clear();
   image(lvl_background, width/3, 0, width/2.75, height);
+  if (kb.presses("up")) {
+    character.vel.y = -5;
+  }
   if (kb.pressing("left")) {
     character.ani ="walk";
     character.mirror.x = true;
@@ -69,11 +91,9 @@ function draw() {
     character.mirror.x = false;
     character.vel.x = 2;
   }
-  else if (kb.presses("up")) {
-    character.vel.y = -5;
-  }
   else {
     character.ani = "idle";
     character.vel.x = 0;
   }
+  //translate(random(-1,1),random(-1,1));
 }
