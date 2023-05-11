@@ -26,11 +26,11 @@ function preload() {
 
 function setup() {
   new Canvas(windowWidth, windowHeight);
-  world.gravity.y = 10;
+  world.gravity.y = 12;
 
   platforms = new Group();
-  platforms.w = 20;
-  platforms.h = 20;
+  platforms.w = width/79;
+  platforms.h = height/37;
   platforms.color = "black";
   platforms.tile = "=";
   platforms.collider = "static";
@@ -77,7 +77,7 @@ function collect() {
 
 function draw() {
   clear();
-  image(lvl_background, width/3, 0, width/2.75, height);
+  image(lvl_background, width/3, 0, width/2.72, height);
   if (kb.presses("up")) {
     character.vel.y = -5;
   }
