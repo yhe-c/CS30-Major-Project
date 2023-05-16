@@ -7,12 +7,15 @@
 
 //initiating global variables
 let lvl_background;
+let enemy_movement;
 let character_img;
 let character_idle;
 let character_walk;
 let lvl_data;
 let platforms;
 let character;
+let enemy;
+let enemy_img;
 let ward_img;
 let ward;
 
@@ -20,6 +23,7 @@ let ward;
 function preload() {
   lvl_background = loadImage("images/lvl_1_img.jpg");
   character_img = loadImage("images/f1.png");
+  enemy_img = loadImage("images/enemy0.png");
   lvl_data = loadStrings("levels/lvl1.txt");
   ward_img = loadImage("images/ward.png");
 }
@@ -62,17 +66,34 @@ function setup() {
   character.friction = 0;
   character.rotationLock = true;
   character.overlaps(ward, collect);
-  
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
   character.addAni("idle", character_idle);
   character_walk = loadAni("images/f1.png", "images/f2.png", "images/f3.png");
   character_walk.frameDelay = 8;
   character.addAni("walk", character_walk);
+
+  enemy = new Sprite();
+  enemy.img = enemy_img;
+  enemy.x = width/2.5;
+  enemy.y = height/(height/45);
+  enemy.collider = "d";
+  enemy.friction = 0;
+  enemy.rotationLock = true;
+  enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
+  enemy_movement.frameDelay = 10;
+  enemy.addAni("walk", enemy_movement);
+  enemySequence();
 }
 
 function collect() {
   ward.remove();
+}
+
+async function enemySequence() {
+  await enemy.move(50);
+  enemySequence();
+  enemy.mirror.x = true;
 }
 
 function draw() {
