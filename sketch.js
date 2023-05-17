@@ -75,10 +75,9 @@ function setup() {
 
   enemy = new Sprite();
   enemy.img = enemy_img;
-  enemy.x = width/2.5;
+  enemy.x = width/1.75;
   enemy.y = height/(height/45);
   enemy.collider = "d";
-  enemy.friction = 0;
   enemy.rotationLock = true;
   enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
   enemy_movement.frameDelay = 10;
@@ -93,7 +92,6 @@ function collect() {
 async function enemySequence() {
   await enemy.move(50);
   enemySequence();
-  enemy.mirror.x = true;
 }
 
 function draw() {
