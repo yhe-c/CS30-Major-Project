@@ -18,7 +18,6 @@ function preload() {
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
   lvl_background = loadImage("images/lvl_1_img.jpg");
-  
 }
 
 function setup() {
