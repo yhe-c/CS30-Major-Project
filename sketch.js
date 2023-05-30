@@ -21,9 +21,8 @@ function preload() {
 }
 
 function setup() {
-  new Canvas(windowWidth, windowHeight);
-  image(lvl_background, width/3, 0, width/2.72, height);
-  world.gravity.y = 12;
+  new Canvas(start_bg_img.w, start_bg_img.h + 45);
+  image(start_bg_img, 0, 0, width, height);
 
   button = new Sprite();
   imageMode = CENTER;
@@ -33,7 +32,7 @@ function setup() {
 }
 
 function startMenu(){
-  image(start_bg_img, width/3, 0, width/2.72, height);
+  image(start_bg_img, 0, 0);
   button.img = start_button;
   button.scale = 1.25;
   if (button.mouse.hovering()) {
@@ -53,7 +52,7 @@ function draw() {
   }
   else if (gameStatus === 1) {
     clear();
-    image(lvl_background, width/3, 0, width/2.72, height);
+    image(lvl_background, 0, 0, width, height);
     startGame(gameStatus);
   }
   //translate(random(-1,1),random(-1,1));

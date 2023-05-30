@@ -59,26 +59,26 @@ function setup() {
   character_walk.frameDelay = 8;
   character.addAni("walk", character_walk);
         
-  enemy = new Sprite();
-  enemy.img = enemy_img;
-  enemy.x = width/1.75;
-  enemy.y = height/3;
-  enemy.collider = "d";
-  enemy.rotationLock = true;
-  enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
-  enemy_movement.frameDelay = 10;
-  enemy.addAni("walk", enemy_movement);
-  enemySequence();
+  // enemy = new Sprite();
+  // enemy.img = enemy_img;
+  // enemy.x = width/1.75;
+  // enemy.y = height/3;
+  // enemy.collider = "d";
+  // enemy.rotationLock = true;
+  // enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
+  // enemy_movement.frameDelay = 10;
+  // enemy.addAni("walk", enemy_movement);
+  // enemySequence();
 }
 
 function collect() {
   ward.remove();
 }
 
-async function enemySequence() {
-  await enemy.move(50);
-  enemySequence();
-}
+// async function enemySequence() {
+//   await enemy.move(50);
+//   enemySequence();
+// }
 
 function startGame(gameStatus) {
   if (gameStatus === 1) {
