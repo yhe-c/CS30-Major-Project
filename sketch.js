@@ -43,6 +43,7 @@ function startMenu(){
   }
   if (button.mouse.pressed()) {
     gameStatus = 1;
+    button.remove;
   }
 }
 

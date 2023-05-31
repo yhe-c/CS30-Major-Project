@@ -86,12 +86,12 @@ function startGame(gameStatus) {
       character.vel.y = -5;
     }
     if (kb.pressing("left")) {
-      character.ani ="walk";
+      character.ani = "walk";
       character.mirror.x = true;
       character.vel.x = -2;
     }
     else if (kb.pressing("right")) {
-      character.ani ="walk";
+      character.ani = "walk";
       character.mirror.x = false;
       character.vel.x = 2;
     }
