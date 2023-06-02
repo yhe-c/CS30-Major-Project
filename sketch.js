@@ -14,6 +14,7 @@ let start_button_hov;
 
 let next_lvl;
 let next_lvl_img;
+let nextLevel;
 
 let character;
 let character_img;
@@ -33,18 +34,19 @@ function preload() {
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
   lvl_background = loadImage("images/lvl_1_img.jpg");
+  lvl_data = loadStrings("levels/lvl1.txt");
 
   next_lvl_img = loadImage("images/next_lvl.png");
 
   character_img = loadImage("images/f1.png");
   enemy_img = loadImage("images/enemy0.png");
-  lvl_data = loadStrings("levels/lvl1.txt");
   ward_img = loadImage("images/ward.png");
 }
 
 function setup() {
   new Canvas(start_bg_img.w, start_bg_img.h + 45);
   world.gravity.y = 10;
+  nextLevel = 1;
   image(start_bg_img, 0, 0, width, height);
 
   button = new Sprite();
@@ -61,8 +63,9 @@ function setup() {
   platforms.collider = "s";
 
   next_lvl = new Group();
-  next_lvl.scale = 2;
-  next_lvl.tile = "*";
+  next_lvl.scale = 1.5;
+  next_lvl.tile = "$";
+  next_lvl.img = next_lvl_img;
   next_lvl.collider = "s";
         
   wards = new Group();
@@ -89,6 +92,7 @@ function setup() {
   character.friction = 0;
   character.rotationLock = true;
   character.overlaps(wards, collect);
+  // character.overlaps(next_lvl, nextLevel);
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
   character.addAni("idle", character_idle);
