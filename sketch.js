@@ -12,16 +12,39 @@ let start_bg_img;
 let start_button;
 let start_button_hov;
 
+let next_lvl;
+let next_lvl_img;
+
+let character;
+let character_img;
+let character_idle;
+let character_walk;
+let lvl_data;
+let enemy;
+let enemy_img;
+let enemy_movement;
+let platforms;
+let wards;
+let ward_img;
+
 //preload images and level data
 function preload() {
   start_bg_img = loadImage("images/start_bg.png");
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
   lvl_background = loadImage("images/lvl_1_img.jpg");
+
+  next_lvl_img = loadImage("images/next_lvl.png");
+
+  character_img = loadImage("images/f1.png");
+  enemy_img = loadImage("images/enemy0.png");
+  lvl_data = loadStrings("levels/lvl1.txt");
+  ward_img = loadImage("images/ward.png");
 }
 
 function setup() {
   new Canvas(start_bg_img.w, start_bg_img.h + 45);
+  world.gravity.y = 10;
   image(start_bg_img, 0, 0, width, height);
 
   button = new Sprite();
@@ -29,6 +52,69 @@ function setup() {
   button.x = width/1.9;
   button.y = height/1.7;
   button.collider = "s";
+
+  platforms = new Group();
+  platforms.w = width/29.5;
+  platforms.h = height/37;
+  platforms.color = "black";
+  platforms.tile = "=";
+  platforms.collider = "s";
+
+  next_lvl = new Group();
+  next_lvl.scale = 2;
+  next_lvl.tile = "*";
+  next_lvl.collider = "s";
+        
+  wards = new Group();
+  wards.w = 5;
+  wards.h = 10;
+  wards.tile = "!";
+  wards.img = ward_img;
+  wards.scale = 1/2;
+  wards.collider = "s";
+        
+  new Tiles(
+    lvl_data,
+    0,
+    0,
+    platforms.w + 1,
+    platforms.h + 1
+  );
+        
+  character = new Sprite();
+  character.img = character_img;
+  character.x = 50;
+  character.y = height/(height/45);
+  character.collider = "d";
+  character.friction = 0;
+  character.rotationLock = true;
+  character.overlaps(wards, collect);
+  character_idle = loadAni("images/f1.png");
+  character_idle.frameDelay = 10;
+  character.addAni("idle", character_idle);
+  character_walk = loadAni("images/f1.png", "images/f2.png", "images/f3.png");
+  character_walk.frameDelay = 8;
+  character.addAni("walk", character_walk);
+        
+  // enemy = new Sprite();
+  // enemy.img = enemy_img;
+  // enemy.x = width/1.75;
+  // enemy.y = height/3;
+  // enemy.collider = "d";
+  // enemy.rotationLock = true;
+  // enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
+  // enemy_movement.frameDelay = 10;
+  // enemy.addAni("walk", enemy_movement);
+  // enemySequence();
+}
+
+// async function enemySequence() {
+//   await enemy.move(50);
+//   enemySequence();
+// }
+
+function collect(character, ward) {
+  ward.remove();
 }
 
 function startMenu(){
@@ -43,7 +129,7 @@ function startMenu(){
   }
   if (button.mouse.pressed()) {
     gameStatus = 1;
-    button.remove;
+    button.remove();
   }
 }
 
@@ -57,4 +143,26 @@ function draw() {
     startGame(gameStatus);
   }
   //translate(random(-1,1),random(-1,1));
+}
+
+function startGame(gameStatus) {
+  if (gameStatus === 1) {
+    if (kb.presses("up")) {
+      character.vel.y = -6.25;
+    }
+    if (kb.pressing("left")) {
+      character.ani = "walk";
+      character.mirror.x = true;
+      character.vel.x = -2;
+    }
+    else if (kb.pressing("right")) {
+      character.ani = "walk";
+      character.mirror.x = false;
+      character.vel.x = 2;
+    }
+    else {
+      character.ani = "idle";
+      character.vel.x = 0;
+    }
+  }
 }
