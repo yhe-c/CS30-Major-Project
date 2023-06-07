@@ -10,7 +10,9 @@ let gameStatus = 0;
 let lvl_background;
 let start_bg_img;
 let start_button;
+let about_button;
 let start_button_hov;
+let about_button_hov;
 
 let next_lvl;
 let next_lvl_img;
@@ -33,6 +35,8 @@ function preload() {
   start_bg_img = loadImage("images/start_bg.png");
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
+  about_button = loadImage("images/start_btn.png");
+  about_button_hov = loadImage("images/start_btn_h.png");
   next_lvl_img = loadImage("images/next_lvl.png");
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
@@ -48,10 +52,10 @@ function setup() {
   world.gravity.y = 10;
   image(start_bg_img, 0, 0, width, height);
 
-  button = new Sprite();
+  button = new Group();
   imageMode = CENTER;
   button.x = width/1.9;
-  button.y = height/1.7;
+  button.scale = 1.25;
   button.collider = "s";
 
   platforms = new Group();
@@ -94,6 +98,7 @@ function setup() {
   character.friction = 0;
   character.rotationLock = true;
   character.overlaps(wards, collect);
+  character.overlaps(next_lvl, updateLvl);
 
   // character.overlaps(next_lvl, nextLevel);
   character_idle = loadAni("images/f1.png");
@@ -125,28 +130,44 @@ function collect(character, ward) {
   ward.remove();
 }
 
-function showGame() {
-  let x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
+function updateLvl() {
+  if (nextLevel < 6) {
+    nextLevel++;
+    lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
+    lvl_data;
+    lvl_data = loadStrings(`levels/lvl${nextLevel}.txt`);
+    platforms.remove();
+    new Tiles(
+      lvl_data,
+      0,
+      0,
+      platforms.w + 1,
+      platforms.h + 1
+    );
   }
 }
 
 function startMenu(){
   image(start_bg_img, 0, 0);
-  button.img = start_button;
-  button.scale = 1.25;
-  if (button.mouse.hovering()) {
-    button.img = start_button_hov;
+  let sBtn = new button.Sprite();
+  sBtn.y = height/1.7;
+  let aBtn = new button.Sprite();
+  aBtn.y = height/1.45;
+  sBtn.img = start_button;
+  aBtn.img = about_button;
+  if (sBtn.mouse.hovering()) {
+    sBtn.img = start_button_hov;
   }
-  if (button.mouse.pressing()) {
-    button.img = start_button_hov;
-  }
-  if (button.mouse.pressed()) {
+  if (sBtn.mouse.pressed()) {
     gameStatus = 1;
-    button.remove();
+    sBtn.remove();
+  }
+  if (aBtn.mouse.hovering()) {
+    aBtn.img = about_button_hov;
+  }
+  if (aBtn.mouse.pressed()) {
+    gameStatus = 1;
+    aBtn.remove();
   }
 }
 
@@ -156,13 +177,13 @@ function draw() {
   }
   else if (gameStatus === 1) {
     clear();
-    image(lvl_background, 0, 0, width, height);
     startGame(gameStatus);
   }
   //translate(random(-1,1),random(-1,1));
 }
 
 function startGame(gameStatus) {
+  image(lvl_background, 0, 0, width, height);
   if (gameStatus === 1) {
     platforms.visible = true;
     wards.visible = true;
@@ -174,12 +195,12 @@ function startGame(gameStatus) {
     if (kb.pressing("left")) {
       character.ani = "walk";
       character.mirror.x = true;
-      character.vel.x = -2;
+      character.vel.x = -5;
     }
     else if (kb.pressing("right")) {
       character.ani = "walk";
       character.mirror.x = false;
-      character.vel.x = 2;
+      character.vel.x = 5;
     }
     else {
       character.ani = "idle";
