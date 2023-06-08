@@ -5,7 +5,8 @@
 //////////////////////////////
 
 //initiating global variables
-let button;
+let sBtn;
+let aBtn;
 let gameStatus = 0;
 let lvl_background;
 let start_bg_img;
@@ -35,8 +36,8 @@ function preload() {
   start_bg_img = loadImage("images/start_bg.png");
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
-  about_button = loadImage("images/start_btn.png");
-  about_button_hov = loadImage("images/start_btn_h.png");
+  about_button = loadImage("images/about_btn.png");
+  about_button_hov = loadImage("images/about_btn_h.png");
   next_lvl_img = loadImage("images/next_lvl.png");
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
@@ -52,11 +53,19 @@ function setup() {
   world.gravity.y = 10;
   image(start_bg_img, 0, 0, width, height);
 
-  button = new Group();
+  sBtn = new Sprite();
   imageMode = CENTER;
-  button.x = width/1.9;
-  button.scale = 1.25;
-  button.collider = "s";
+  sBtn.x = width/1.9;
+  sBtn.y = height/1.7;
+  sBtn.scale = 1.25;
+  sBtn.collider = "s";
+
+  aBtn = new Sprite();
+  imageMode = CENTER;
+  aBtn.x = width/1.9;
+  aBtn.y = height/1.5;
+  aBtn.scale = 1.25;
+  aBtn.collider = "s";
 
   platforms = new Group();
   platforms.w = width/29.5;
@@ -149,10 +158,6 @@ function updateLvl() {
 
 function startMenu(){
   image(start_bg_img, 0, 0);
-  let sBtn = new button.Sprite();
-  sBtn.y = height/1.7;
-  let aBtn = new button.Sprite();
-  aBtn.y = height/1.45;
   sBtn.img = start_button;
   aBtn.img = about_button;
   if (sBtn.mouse.hovering()) {
@@ -161,13 +166,13 @@ function startMenu(){
   if (sBtn.mouse.pressed()) {
     gameStatus = 1;
     sBtn.remove();
+    aBtn.remove();
   }
   if (aBtn.mouse.hovering()) {
     aBtn.img = about_button_hov;
   }
   if (aBtn.mouse.pressed()) {
-    gameStatus = 1;
-    aBtn.remove();
+    aBtn.visible = false;
   }
 }
 
