@@ -7,13 +7,18 @@
 //initiating global variables
 let sBtn;
 let aBtn;
+let bBtn;
 let gameStatus = 0;
 let lvl_background;
 let start_bg_img;
+let ab_page;
+let about_page;
 let start_button;
 let about_button;
+let back_button;
 let start_button_hov;
 let about_button_hov;
+let back_button_hov;
 
 let next_lvl;
 let next_lvl_img;
@@ -38,6 +43,9 @@ function preload() {
   start_button_hov = loadImage("images/start_btn_h.png");
   about_button = loadImage("images/about_btn.png");
   about_button_hov = loadImage("images/about_btn_h.png");
+  back_button = loadImage("images/back_btn.png");
+  back_button_hov = loadImage("images/back_btn_h.png");
+  about_page = loadImage("images/about_page.png");
   next_lvl_img = loadImage("images/next_lvl.png");
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
@@ -66,6 +74,15 @@ function setup() {
   aBtn.y = height/1.5;
   aBtn.scale = 1.25;
   aBtn.collider = "s";
+
+  bBtn = new Sprite();
+  imageMode = CENTER;
+  bBtn.x = 30;
+  bBtn.y = 30;
+  bBtn.scale = 1.25;
+  bBtn.collider = "s";
+  bBtn.visible = false;
+
 
   platforms = new Group();
   platforms.w = width/29.5;
@@ -101,8 +118,8 @@ function setup() {
         
   character = new Sprite();
   character.img = character_img;
-  character.x = 50;
-  character.y = height/(height/45);
+  character.x = 30;
+  character.y = 40;
   character.collider = "d";
   character.friction = 0;
   character.rotationLock = true;
@@ -145,19 +162,34 @@ function updateLvl() {
     lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
     lvl_data;
     lvl_data = loadStrings(`levels/lvl${nextLevel}.txt`);
-    platforms.remove();
-    new Tiles(
-      lvl_data,
-      0,
-      0,
-      platforms.w + 1,
-      platforms.h + 1
-    );
+  }
+  new Tiles(
+    lvl_data,
+    0,
+    0,
+    platforms.w + 1,
+    platforms.h + 1
+  );
+}
+
+function aboutPage() {
+  image(about_page, 0, 0, width, height);
+  bBtn.img = back_button;
+  bBtn.visible = true;
+  sBtn.visible = false;
+  if (bBtn.mouse.hovering()) {
+    bBtn.img = back_button_hov;
+  }
+  if (bBtn.mouse.pressed()) {
+    bBtn.visible = false;
+    sBtn.visible = true;
+    aBtn.visible = true;
+    gameStatus = 0;
   }
 }
 
 function startMenu(){
-  image(start_bg_img, 0, 0);
+  image(start_bg_img, 0, 0, width, height);
   sBtn.img = start_button;
   aBtn.img = about_button;
   if (sBtn.mouse.hovering()) {
@@ -167,11 +199,13 @@ function startMenu(){
     gameStatus = 1;
     sBtn.remove();
     aBtn.remove();
+    bBtn.remove();
   }
   if (aBtn.mouse.hovering()) {
     aBtn.img = about_button_hov;
   }
   if (aBtn.mouse.pressed()) {
+    gameStatus = 0.5;
     aBtn.visible = false;
   }
 }
@@ -179,6 +213,9 @@ function startMenu(){
 function draw() {
   if (gameStatus === 0) {
     startMenu();
+  }
+  else if (gameStatus === 0.5) {
+    aboutPage();
   }
   else if (gameStatus === 1) {
     clear();
