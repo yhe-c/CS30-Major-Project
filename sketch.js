@@ -20,6 +20,7 @@ let start_button_hov;
 let about_button_hov;
 let back_button_hov;
 
+let showNext = 0;
 let next_lvl;
 let next_lvl_img;
 let nextLevel = 1;
@@ -35,6 +36,8 @@ let enemy_movement;
 let platforms;
 let wards;
 let ward_img;
+
+//enemy class?
 
 //preload images and level data
 function preload() {
@@ -79,7 +82,6 @@ function setup() {
   imageMode = CENTER;
   bBtn.x = 30;
   bBtn.y = 30;
-  bBtn.scale = 1.25;
   bBtn.collider = "s";
   bBtn.visible = false;
 
@@ -125,8 +127,6 @@ function setup() {
   character.rotationLock = true;
   character.overlaps(wards, collect);
   character.overlaps(next_lvl, updateLvl);
-
-  // character.overlaps(next_lvl, nextLevel);
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
   character.addAni("idle", character_idle);
@@ -147,22 +147,21 @@ function setup() {
   // enemySequence();
 }
 
-// async function enemySequence() {
-//   await enemy.move(50);
-//   enemySequence();
-// }
-
 function collect(character, ward) {
   ward.remove();
+  showNext++;
 }
 
 function updateLvl() {
+  next_lvl.remove();
   if (nextLevel < 6) {
     nextLevel++;
     lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
     lvl_data;
     lvl_data = loadStrings(`levels/lvl${nextLevel}.txt`);
   }
+  character.x = 30;
+  character.y = 40;
   new Tiles(
     lvl_data,
     0,
@@ -230,7 +229,9 @@ function startGame(gameStatus) {
     platforms.visible = true;
     wards.visible = true;
     character.visible = true;
-    next_lvl.visible = true;
+    if (showNext === 3) {
+      next_lvl.visible = true;
+    }
     if (kb.presses("up")) {
       character.vel.y = -6.25;
     }
