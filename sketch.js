@@ -30,6 +30,7 @@ let character_img;
 let character_idle;
 let character_walk;
 let lvl_data;
+let levelData;
 let enemy;
 let enemy_img;
 let enemy_movement;
@@ -52,7 +53,7 @@ function preload() {
   next_lvl_img = loadImage("images/next_lvl.png");
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
-  lvl_data = loadStrings(`levels/lvl${nextLevel}.txt`);
+  levelData = [loadStrings(`levels/lvl1.txt`), loadStrings(`levels/lvl2.txt`), loadStrings(`levels/lvl3.txt`), loadStrings(`levels/lvl4.txt`), loadStrings(`levels/lvl5.txt`), loadStrings(`levels/lvl6.txt`), ];
 
   character_img = loadImage("images/f1.png");
   enemy_img = loadImage("images/enemy0.png");
@@ -60,6 +61,7 @@ function preload() {
 }
 
 function setup() {
+  noStroke();
   new Canvas(start_bg_img.w, start_bg_img.h + 45);
   world.gravity.y = 10;
   image(start_bg_img, 0, 0, width, height);
@@ -87,8 +89,8 @@ function setup() {
 
 
   platforms = new Group();
-  platforms.w = width/29.5;
-  platforms.h = height/37;
+  platforms.w = width/28;
+  platforms.h = height/35;
   platforms.color = "black";
   platforms.tile = "=";
   platforms.collider = "s";
@@ -109,13 +111,14 @@ function setup() {
   wards.scale = 1/2;
   wards.collider = "s";
   wards.visible = false;
-        
+      
+  lvl_data = levelData[0];
   new Tiles(
     lvl_data,
     0,
     0,
-    platforms.w + 1,
-    platforms.h + 1
+    platforms.w,
+    platforms.h 
   );
         
   character = new Sprite();
@@ -155,22 +158,37 @@ function collect(character, ward) {
 function updateLvl() {
   next_lvl.remove();
   if (nextLevel < 6) {
+    lvl_data = levelData[nextLevel];
     nextLevel++;
     lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
-    lvl_data;
-    lvl_data = loadStrings(`levels/lvl${nextLevel}.txt`);
   }
   character.x = 30;
   character.y = 40;
-  new Tiles(
-    lvl_data,
-    0,
-    0,
-    platforms.w + 1,
-    platforms.h + 1
-  );
+  platforms.remove();
+  if (nextLevel === 4) {
+    platforms.color = "grey";
+    new Tiles(
+      lvl_data,
+      0,
+      0,
+      platforms.w,
+      platforms.h
+    );
+  }
+  else {
+    platforms.color = "black";
+    new Tiles(
+      lvl_data,
+      0,
+      0,
+      platforms.w,
+      platforms.h
+    );
+  }
+  next_lvl.visible = false;
+  showNext = 0;
 }
-
+ 
 function aboutPage() {
   image(about_page, 0, 0, width, height);
   bBtn.img = back_button;
@@ -232,15 +250,15 @@ function startGame(gameStatus) {
     if (showNext === 3) {
       next_lvl.visible = true;
     }
-    if (kb.presses("up")) {
+    if (kb.presses("up") || kb.presses("w")) {
       character.vel.y = -6.25;
     }
-    if (kb.pressing("left")) {
+    if (kb.pressing("left") || kb.presses("a")) {
       character.ani = "walk";
       character.mirror.x = true;
       character.vel.x = -5;
     }
-    else if (kb.pressing("right")) {
+    else if (kb.pressing("right") || kb.presses("d")) {
       character.ani = "walk";
       character.mirror.x = false;
       character.vel.x = 5;
