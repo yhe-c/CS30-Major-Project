@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Hair My Screams 2.0
 // Eesha He
 // Monday, June 19, 2023
@@ -5,6 +6,28 @@
 //////////////////////////////
 
 //initiating global variables
+
+//enemy class?
+class Enemy {
+  constructor(x, y, dx) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.gravity = 0.75;   
+  }
+  display() {
+    this.img = enemy_img;
+  }
+  update() {
+    let state = true;
+    this.x += this.dx;
+    this.y += this.gravity;
+    if (this.x < 2 * (width/28) || this.x > width - (2 * (width/28))) {
+      this.mirror.x = !state;
+    }
+  }
+}
+
 let sBtn;
 let aBtn;
 let bBtn;
@@ -24,6 +47,7 @@ let showNext = 0;
 let next_lvl;
 let next_lvl_img;
 let nextLevel = 1;
+let gameEnd;
 
 let character;
 let character_img;
@@ -32,13 +56,14 @@ let character_walk;
 let lvl_data;
 let levelData;
 let enemy;
+let enemySpawnTimer;
+let enemies = [];
 let enemy_img;
 let enemy_movement;
 let platforms;
 let wards;
 let ward_img;
 
-//enemy class?
 
 //preload images and level data
 function preload() {
@@ -51,9 +76,10 @@ function preload() {
   back_button_hov = loadImage("images/back_btn_h.png");
   about_page = loadImage("images/about_page.png");
   next_lvl_img = loadImage("images/next_lvl.png");
+  gameEnd = loadImage("images/end.png");
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
-  levelData = [loadStrings(`levels/lvl1.txt`), loadStrings(`levels/lvl2.txt`), loadStrings(`levels/lvl3.txt`), loadStrings(`levels/lvl4.txt`), loadStrings(`levels/lvl5.txt`), loadStrings(`levels/lvl6.txt`), ];
+  levelData = [loadStrings("levels/lvl1.txt"), loadStrings("levels/lvl2.txt"), loadStrings("levels/lvl3.txt"), loadStrings("levels/lvl4.txt"), loadStrings("levels/lvl5.txt"), loadStrings("levels/lvl6.txt"), ];
 
   character_img = loadImage("images/f1.png");
   enemy_img = loadImage("images/enemy0.png");
@@ -137,18 +163,26 @@ function setup() {
   character_walk.frameDelay = 8;
   character.addAni("walk", character_walk);
   character.visible = false;
+
+  enemySpawnTimer = new Timer(10000 - nextLevel);
+
         
-  // enemy = new Sprite();
-  // enemy.img = enemy_img;
-  // enemy.x = width/1.75;
-  // enemy.y = height/3;
-  // enemy.collider = "d";
-  // enemy.rotationLock = true;
-  // enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
-  // enemy_movement.frameDelay = 10;
-  // enemy.addAni("walk", enemy_movement);
-  // enemySequence();
+//   enemy = new Sprite();
+//   enemy.img = enemy_img;
+//   enemy.x = width/1.75;
+//   enemy.y = height/3;
+//   enemy.collider = "d";
+//   enemy.rotationLock = true;
+//   enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
+//   enemy_movement.frameDelay = 10;
+//   enemy.addAni("walk", enemy_movement);
+//   enemySequence();
 }
+
+// async function enemySequence() {
+//   await enemy.move(10 * nextLevel);
+//   enemySequence();
+// }
 
 function collect(character, ward) {
   ward.remove();
@@ -162,8 +196,16 @@ function updateLvl() {
     nextLevel++;
     lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
   }
+  else {
+    gameStatus = -1;
+  }
+  reloadLvl();
+}
+
+function reloadLvl() {
   character.x = 30;
   character.y = 40;
+  wards.remove();
   platforms.remove();
   if (nextLevel === 4) {
     platforms.color = "grey";
@@ -188,7 +230,7 @@ function updateLvl() {
   next_lvl.visible = false;
   showNext = 0;
 }
- 
+
 function aboutPage() {
   image(about_page, 0, 0, width, height);
   bBtn.img = back_button;
@@ -238,12 +280,27 @@ function draw() {
     clear();
     startGame(gameStatus);
   }
+  else if (gameStatus === -0.5) {
+    reloadLvl();
+  }
+  else if (gameStatus === -1) {
+    image(gameEnd, 0, 0, width, height);
+    platforms.remove();
+    wards.remove();
+    next_lvl.remove();
+    character.visible = false;
+  }
   //translate(random(-1,1),random(-1,1));
 }
 
 function startGame(gameStatus) {
   image(lvl_background, 0, 0, width, height);
+  enemySpawnTimer.start();
   if (gameStatus === 1) {
+    if (enemySpawnTimer.expired()) {
+      spawnEnemy();
+      enemySpawnTimer.start();
+    }
     platforms.visible = true;
     wards.visible = true;
     character.visible = true;
@@ -268,4 +325,9 @@ function startGame(gameStatus) {
       character.vel.x = 0;
     }
   }
+}
+
+function spawnEnemy() {
+  let theEnemy = new Enemy(30, 50, nextLevel * 1.5);
+  enemies.push(theEnemy);
 }
