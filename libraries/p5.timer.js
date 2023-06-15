@@ -73,7 +73,7 @@ class Timer {
       this.paused = true; 
     }
   }
-
+  
   // adds x millis to the remaining duration. 
   addTime(x){
     this.duration += x; 
@@ -83,7 +83,7 @@ class Timer {
   setTimer(_duration) {
     this.duration = _duration;
   }
-
+  
   //forces an expired() state by setting remaining duration to zero. 
   endTimer(){
     this.duration = 0; 
@@ -100,7 +100,7 @@ class Timer {
     if( this.expired() ) {
       return 0;
     }
-
+      
     // never return a neg number + account for pause time
     let rt = this.startTime + this.duration + this.getPauseTime() - millis();
     if( rt < 0 )

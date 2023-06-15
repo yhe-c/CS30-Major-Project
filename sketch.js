@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // Hair My Screams 2.0
 // Eesha He
 // Monday, June 19, 2023
@@ -8,25 +7,25 @@
 //initiating global variables
 
 //enemy class?
-class Enemy {
-  constructor(x, y, dx) {
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.gravity = 0.75;   
-  }
-  display() {
-    this.img = enemy_img;
-  }
-  update() {
-    let state = true;
-    this.x += this.dx;
-    this.y += this.gravity;
-    if (this.x < 2 * (width/28) || this.x > width - (2 * (width/28))) {
-      this.mirror.x = !state;
-    }
-  }
-}
+// class Enemy {
+//   constructor(x, y, dx) {
+//     this.x = x;
+//     this.y = y;
+//     this.dx = dx;
+//     this.gravity = 0.75;   
+//   }
+//   display() {
+//     this.img = enemy_img;
+//   }
+//   update() {
+//     let state = true;
+//     this.x += this.dx;
+//     this.y += this.gravity;
+//     if (this.x < 2 * (width/28) || this.x > width - (2 * (width/28))) {
+//       this.mirror.x = !state;
+//     }
+//   }
+// }
 
 let sBtn;
 let aBtn;
@@ -36,6 +35,7 @@ let lvl_background;
 let start_bg_img;
 let ab_page;
 let about_page;
+let game_over;
 let start_button;
 let about_button;
 let back_button;
@@ -55,7 +55,6 @@ let character_idle;
 let character_walk;
 let lvl_data;
 let levelData;
-let enemy;
 let enemySpawnTimer;
 let enemies = [];
 let enemy_img;
@@ -80,7 +79,7 @@ function preload() {
   
   lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
   levelData = [loadStrings("levels/lvl1.txt"), loadStrings("levels/lvl2.txt"), loadStrings("levels/lvl3.txt"), loadStrings("levels/lvl4.txt"), loadStrings("levels/lvl5.txt"), loadStrings("levels/lvl6.txt"), ];
-
+  game_over = [loadImage("images/gameover1.png"), loadImage("images/gameover2.png"), loadImage("images/gameover3.png"), loadImage("images/gameover4.png"), loadImage("images/gameover5.png"), loadImage("images/gameover6.png")];
   character_img = loadImage("images/f1.png");
   enemy_img = loadImage("images/enemy0.png");
   ward_img = loadImage("images/ward.png");
@@ -155,6 +154,7 @@ function setup() {
   character.friction = 0;
   character.rotationLock = true;
   character.overlaps(wards, collect);
+  // character.overlaps(enemies, gameOver);
   character.overlaps(next_lvl, updateLvl);
   character_idle = loadAni("images/f1.png");
   character_idle.frameDelay = 10;
@@ -164,21 +164,28 @@ function setup() {
   character.addAni("walk", character_walk);
   character.visible = false;
 
-  enemySpawnTimer = new Timer(10000 - nextLevel);
-
-        
-//   enemy = new Sprite();
-//   enemy.img = enemy_img;
-//   enemy.x = width/1.75;
-//   enemy.y = height/3;
-//   enemy.collider = "d";
-//   enemy.rotationLock = true;
-//   enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
-//   enemy_movement.frameDelay = 10;
-//   enemy.addAni("walk", enemy_movement);
-//   enemySequence();
+  enemies = new Group();
+  enemies.img = enemy_img;
+  enemies.x = 30;
+  enemies.y = 45;
+  enemies.mirror.x = false;
+  enemies.collider = "d"; 
+  enemies.rotationLock = true;  
+  enemy_movement = loadAni("images/enemy0.png", "images/enemy1.png", "images/enemy2.png", "images/enemy1.png");
+  enemy_movement.frameDelay = 10;
+  enemies.addAni("walk", enemy_movement);
+  enemies.moveTowards(character);
 }
 
+function spawnEnemy() {
+  enemySpawnTimer = new Timer(10000 - 1000 * nextLevel);
+  enemySpawnTimer.start();
+  if (enemySpawnTimer.expired()) {
+    new enemies.Sprite();
+    enemySpawnTimer.start();
+  }
+  // enemies.vel.x = 10 * nextLevel;
+}
 // async function enemySequence() {
 //   await enemy.move(10 * nextLevel);
 //   enemySequence();
@@ -190,6 +197,8 @@ function collect(character, ward) {
 }
 
 function updateLvl() {
+  enemySpawnTimer;
+  enemySpawnTimer = new Timer(10000 - 1000 * nextLevel);
   next_lvl.remove();
   if (nextLevel < 6) {
     lvl_data = levelData[nextLevel];
@@ -295,12 +304,8 @@ function draw() {
 
 function startGame(gameStatus) {
   image(lvl_background, 0, 0, width, height);
-  enemySpawnTimer.start();
   if (gameStatus === 1) {
-    if (enemySpawnTimer.expired()) {
-      spawnEnemy();
-      enemySpawnTimer.start();
-    }
+    spawnEnemy();
     platforms.visible = true;
     wards.visible = true;
     character.visible = true;
@@ -308,7 +313,9 @@ function startGame(gameStatus) {
       next_lvl.visible = true;
     }
     if (kb.presses("up") || kb.presses("w")) {
-      character.vel.y = -6.25;
+      if (character.colliding(platforms)) {
+        character.vel.y = -6.75;
+      }
     }
     if (kb.pressing("left") || kb.presses("a")) {
       character.ani = "walk";
@@ -327,7 +334,7 @@ function startGame(gameStatus) {
   }
 }
 
-function spawnEnemy() {
-  let theEnemy = new Enemy(30, 50, nextLevel * 1.5);
-  enemies.push(theEnemy);
+function gameOver() {
+  let bgNum = random(1, 6);
+  image(game_over[bgNum], 0, 0, width, height);
 }
