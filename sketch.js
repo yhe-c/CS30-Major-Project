@@ -2,10 +2,10 @@
 // Eesha He
 // Monday, June 19, 2023
 
-//////////////////////////////
+//////////////////////////////////////////////////////////////
 
 //initiating global variables
-let aBtn, bBtn, hBtn, pBtn, rBtn, sBtn;
+let aBtn, bBtn, hBtn, pBtn, rBtn, reBtn, sBtn;
 let ab_page, about_page;
 let about_button, back_button, start_button;
 let about_button_hov, back_button_hov, start_button_hov;
@@ -22,79 +22,110 @@ let nextLevel = 1;
 let pause_button, pause_button_hov;
 let platforms;
 let restart_button, restart_button_hov;
+let resume_button, resume_button_hov;
 let showNext = 0;
 let start_bg_img;
 let state = true;
 let wards, ward_img;
-
+let pause_screen;
 
 //preload images and level data
 function preload() {
+  //BUTTONS - probably could've used and array for each button to half the clutter but I'm too tired
   about_button = loadImage("images/about_btn.png");
   about_button_hov = loadImage("images/about_btn_h.png");
-  about_page = loadImage("images/about_page.png");
-  back_button = loadImage("images/back_btn.png");
   back_button_hov = loadImage("images/back_btn_h.png");
-  character_img = loadImage("images/f1.png");
-  enemy_img = loadImage("images/enemy0.png");
-  gameEnd = loadImage("images/end.png");
-  game_over = [loadImage("images/gameover1.png"), loadImage("images/gameover2.png"), loadImage("images/gameover3.png"), loadImage("images/gameover4.png"), loadImage("images/gameover5.png"), loadImage("images/gameover6.png")];
+  back_button = loadImage("images/back_btn.png");
   home_button = loadImage("images/home_btn.png");
   home_button_hov = loadImage("images/home_btn_h.png");
-  levelData = [loadStrings("levels/lvl1.txt"), loadStrings("levels/lvl2.txt"), loadStrings("levels/lvl3.txt"), loadStrings("levels/lvl4.txt"), loadStrings("levels/lvl5.txt"), loadStrings("levels/lvl6.txt"), ];
-  lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
-  next_lvl_img = loadImage("images/next_lvl.png");
   pause_button = loadImage("images/pause_btn.png");
   pause_button_hov = loadImage("images/pause_btn_h.png");
   restart_button = loadImage("images/restart_btn.png");
   restart_button_hov = loadImage("images/restart_btn_h.png");
-  start_bg_img = loadImage("images/start_bg.png");
+  resume_button = loadImage("images/resume_btn.png");
+  resume_button_hov = loadImage("images/resume_btn_h.png");
   start_button = loadImage("images/start_btn.png");
   start_button_hov = loadImage("images/start_btn_h.png");
+  //END OF BUTTONS
+
+  //OTHER IMAGES/DATA
+  about_page = loadImage("images/about_page.png");
+  character_img = loadImage("images/f1.png");
+  enemy_img = loadImage("images/enemy0.png");
+  gameEnd = loadImage("images/end.png");
+  game_over = [loadImage("images/gameover1.png"), loadImage("images/gameover2.png"), loadImage("images/gameover3.png"), loadImage("images/gameover4.png"), loadImage("images/gameover5.png"), loadImage("images/gameover6.png")];
+  levelData = [loadStrings("levels/lvl1.txt"), loadStrings("levels/lvl2.txt"), loadStrings("levels/lvl3.txt"), loadStrings("levels/lvl4.txt"), loadStrings("levels/lvl5.txt"), loadStrings("levels/lvl6.txt"), ];
+  lvl_background = loadImage(`images/lvl_${nextLevel}_img.jpg`);
+  next_lvl_img = loadImage("images/next_lvl.png");
+  start_bg_img = loadImage("images/start_bg.png");
   ward_img = loadImage("images/ward.png");
+  pause_screen = loadImage("images/pause_menu.png");
 }
 
-//setup groups and other sprites 
+//setup canvas, groups, tiles, and sprites 
 function setup() {
   noStroke();
   new Canvas(start_bg_img.w, start_bg_img.h + 45);
   world.gravity.y = 10;
   image(start_bg_img, 0, 0, width, height);
 
-  //about button
-  aBtn = new Sprite();
+  //BUTTONS - could've made them a group but I'm too tired
+  aBtn = new Sprite();  //about button
   imageMode = CENTER;
   aBtn.x = width/1.9;
   aBtn.y = height/1.5;
   aBtn.scale = 1.25;
   aBtn.collider = "s";
 
-  //back button
-  bBtn = new Sprite();
+  bBtn = new Sprite();  //back button
   imageMode = CENTER;
   bBtn.x = 30;
   bBtn.y = 30;
   bBtn.collider = "s";
   bBtn.visible = false;
 
-  //start button
-  sBtn = new Sprite();
+  // hBtn = new Sprite();  //home button
+  // imageMode = CENTER;
+  // hBtn.x = width/1.9;
+  // hBtn.y = height/1.7;
+  // hBtn.collider = "s";
+
+  pBtn = new Sprite();  //pause button
+  imageMode = CENTER;
+  pBtn.x = 23;
+  pBtn.y = 25;
+  pBtn.collider = "s";
+  pBtn.visible = false;
+
+  // rBtn = new Sprite();  //restart button
+  // imageMode = CENTER;
+  // rBtn.x = width/1.9;
+  // rBtn.y = height/1.7;
+  // rBtn.collider = "s";
+
+  // reBtn = new Sprite();  //resume button
+  // imageMode = CENTER;
+  // reBtn.x = width/2;
+  // reBtn.y = height/1.7;
+  // reBtn.collider = "s";
+
+  sBtn = new Sprite();  //start button
   imageMode = CENTER;
   sBtn.x = width/1.9;
   sBtn.y = height/1.7;
   sBtn.scale = 1.25;
   sBtn.collider = "s";
-  
-  //teleport to next level
-  next_lvl = new Group();
+  //END OF BUTTONS
+
+  //TILES
+  next_lvl = new Group();  //teleport to next level
   next_lvl.scale = 1.5;
   next_lvl.tile = "$";
   next_lvl.img = next_lvl_img;
   next_lvl.collider = "s";
   next_lvl.visible = false;
 
-  //platforms and walls group
-  platforms = new Group();
+  platforms = new Group();  //platforms and walls group
   platforms.w = width/28;
   platforms.h = height/35;
   platforms.color = "black";
@@ -102,8 +133,7 @@ function setup() {
   platforms.collider = "s";
   platforms.visible = false;
 
-  //wards group
-  wards = new Group();
+  wards = new Group();  //wards group
   wards.w = 5;
   wards.h = 10;
   wards.tile = "!";
@@ -112,8 +142,7 @@ function setup() {
   wards.collider = "s";
   wards.visible = false;
 
-  //loading first level
-  lvl_data = levelData[0];
+  lvl_data = levelData[0];  //loading first level
   new Tiles(
     lvl_data,
     0,
@@ -121,6 +150,7 @@ function setup() {
     platforms.w,
     platforms.h 
   );
+  //END OF TILES
 
   //character sprite     
   character = new Sprite();
@@ -153,6 +183,7 @@ function setup() {
 
 //function to spwan enemies
 function spawnEnemy() {
+  enemies.visible = true;
   new enemies.Sprite();
   enemySequence();
 }
@@ -236,9 +267,40 @@ function aboutPage() {
   }
 }
 
+function pauseMenu() {
+  hBtn.img = home_button;
+  reBtn.img = resume_button;
+  rBtn.img = restart_button;
+  redraw();
+  if (hBtn.mouse.hovering()) {
+    hBtn.img = home_button_hov;
+  }
+  if (hBtn.mouse.pressed()) {
+    gameStatus = 0;
+  }
+  if (reBtn.mouse.hovering()) {
+    reBtn.img = resume_button_hov;
+  }
+  if (reBtn.mouse.pressed()) {
+    loop();
+  }
+  if (rBtn.mouse.hovering()) {
+    rBtn.img = restart_button_hov;
+  }
+  if (rBtn.mouse.pressed()) {
+    reloadLvl();
+  }
+}
+
 //function that shows the start menu
 function startMenu(){
   image(start_bg_img, 0, 0, width, height);
+  pBtn.visible = false;
+  wards.visible = false;
+  platforms.visible = false;
+  character.visible = false;
+  nextLevel.visible = false;
+  enemies.visible = false;
   sBtn.img = start_button;
   aBtn.img = about_button;
   if (sBtn.mouse.hovering()) {
@@ -261,7 +323,7 @@ function startMenu(){
   }
 }
 
-//main drawr loop checking for game status
+//main draw loop checking for game status
 function draw() {
   if (gameStatus === 0) { //game status for showing the start menu
     startMenu();
@@ -273,8 +335,14 @@ function draw() {
     clear();
     startGame(gameStatus);
   }
-  else if (gameStatus === -0.5) { //game status for reloading/retrying a level
-    reloadLvl();
+  else if (gameStatus === -0.5) { //game status for failure of completion of a level
+    let bgNum = Math.floor(random(0, 5));
+    image(game_over[bgNum], 0, 0, width, height);
+    platforms.remove();
+    wards.remove();
+    enemies.remove();
+    next_lvl.remove();
+    character.visible = false;
   }
   else if (gameStatus === -1) { //game status for completion of the game
     image(gameEnd, 0, 0, width, height);
@@ -284,16 +352,7 @@ function draw() {
     next_lvl.remove();
     character.visible = false;
   }
-  else if (gameStatus === -2) {
-    let bgNum = Math.floor(random(0, 5));
-    image(game_over[bgNum], 0, 0, width, height);
-    platforms.remove();
-    wards.remove();
-    enemies.remove();
-    next_lvl.remove();
-    character.visible = false;
-  }
-  //translate(random(-1,1),random(-1,1));
+  //translate(random(-1,1),random(-1,1)); //shaking effect
 }
 
 //function that starts and runs most of the game
@@ -307,10 +366,20 @@ function startGame(gameStatus) {
     gameStatus = -2;
   }
   if (gameStatus === 1) {
+    pBtn.img = pause_button;
+    pBtn.visible = true;
     platforms.visible = true;
     wards.visible = true;
     character.visible = true;
-    if (showNext === 3) { //show teleport to the next level after collecting all 3 wards
+    if (pBtn.mouse.hovering()) {
+      pBtn.img = pause_button_hov;
+    }
+    if (pBtn.mouse.pressed()) {
+      // pauseMenu();
+      image(pause_screen, width/4, height/2, width/3, height/7);
+      noLoop();
+    }
+    if (showNext === 3) { //show teleport for the next level after collecting all 3 wards
       next_lvl.visible = true;
     }
     if (kb.presses("up") || kb.presses("w")) { //jumping
@@ -328,14 +397,28 @@ function startGame(gameStatus) {
       character.mirror.x = false;
       character.vel.x = 5;
     }
-    else { //add idle
+    else { //add idle animation <- haha too tired
       character.ani = "idle";
       character.vel.x = 0;
     }
   }
 }
 
-//function for when the level isn't complete
+function keyPressed() {
+  if (keyCode === BACKSPACE) {
+    reloadLvl();
+    loop();
+  }
+  if (keyCode === ENTER) {
+    loop();
+  }
+  if (keyCode === ESCAPE) {
+    gameStatus = 0;
+    loop();
+  }
+}
+
+//function for failure of completion of the level
 function gameOver() {
   platforms.remove();
   wards.remove();
