@@ -23,7 +23,7 @@ let pause_button, pause_button_hov, pauseMenu, pause_screen, paused;
 let platforms;
 let showNext = 0;
 let selectBtnF, selectBtnM, selection_bg, select_character;
-let soundJump, soundWard, soundOver;
+let soundJump, soundWard, soundOver, soundComplete;
 let soundOn = true;
 let start_bg_img;
 let state = true;
@@ -32,10 +32,11 @@ let wards, ward_img;
 //preload audio, images and level data
 function preload() {
   //AUDIO
-  background_music = loadSound("audio/zoldyck_theme.mp3");
+  background_music = loadSound("audio/lavender_town.mp3");
   soundJump = loadSound("audio/jump_sfx.mp3");
   soundWard = loadSound("audio/ward_sfx.mp3");
   soundOver = loadSound("audio/gameover_sfx.mp4");
+  soundComplete = loadSound("audio/game_complete_sfx.mp3");
 
   //BUTTONS
   about_button = loadImage("images/about_btn.png");
@@ -74,6 +75,7 @@ function setup() {
   soundJump.setVolume(0.01);
   soundWard.setVolume(0.25);
   soundOver.setVolume(0.2);
+  soundComplete.setVolume(0.4);
   //canvas
   new Canvas(start_bg_img.w, start_bg_img.h + 45);
   world.gravity.y = 10;
@@ -425,11 +427,13 @@ function draw() {
     soundJump.setVolume(0.01);
     soundWard.setVolume(0.25);
     soundOver.setVolume(0.2);
+    soundComplete.setVolume(0.4);
   }
   if (!soundOn) {
     soundJump.setVolume(0);
     soundWard.setVolume(0);
     soundOver.setVolume(0);
+    soundComplete.setVolume(0);
   }
   if (gameStatus === 0) { //game status for showing the start menu
     startMenu();
@@ -449,6 +453,8 @@ function draw() {
   }
   else if (gameStatus === -1) { //game status for completion of the game
     image(game_end, 0, 0, width, height);
+    noLoop();
+    soundComplete.play();
     platforms.remove();
     wards.remove();
     enemies.remove();
